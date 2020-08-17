@@ -36,9 +36,9 @@ static int usb_stm32f4_reset_hnd(struct lthread *self) {
 
 /*** PCD Driver required functions ***/
 
-void HAL_Delay(uint32_t Delay) {
-	ksleep(Delay);
-}
+//void HAL_Delay(uint32_t Delay) {
+//	ksleep(Delay);
+//}
 
 /**
  * @brief  Initializes the PCD MSP.

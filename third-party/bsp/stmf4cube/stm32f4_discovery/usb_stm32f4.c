@@ -104,8 +104,40 @@ void HAL_PCD_MspDeInit(PCD_HandleTypeDef *hpcd) {
  */
 void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd) {
 	//USBD_LL_SetupStage(hpcd->pData, (uint8_t *)hpcd->Setup);
+	uint8_t *data = (uint8_t *)hpcd->Setup;
+	//	copy hpcd->Setup(array with 8-byte request) to internal data
+  //USBD_StatusTypeDef ret;
+  //USBD_ParseSetupRequest(&pdev->request, psetup);
+
+	//not needed(?)
+  //pdev->ep0_state = USBD_EP0_SETUP;
+  //pdev->ep0_data_len = pdev->request.wLength;
+
+//  switch (pdev->request.bmRequest & 0x1FU)
+//  {
+//    case USB_REQ_RECIPIENT_DEVICE:
+//      ret = USBD_StdDevReq(pdev, &pdev->request);
+//      break;
+//
+//    case USB_REQ_RECIPIENT_INTERFACE:
+//      ret = USBD_StdItfReq(pdev, &pdev->request);
+//      break;
+//
+//    case USB_REQ_RECIPIENT_ENDPOINT:
+//      ret = USBD_StdEPReq(pdev, &pdev->request);
+//      break;
+//
+//    default:
+//      ret = USBD_LL_StallEP(pdev, (pdev->request.bmRequest & 0x80U));
+//      break;
+//  }
+//  return ret;
+//}
 	//here calls a udc function and passes the udc struct address in pData
 	printk("usb: setupstage\n");
+
+	printk("usb: %x %x %x %x %x %x %x %x\n", data[0], data[1], data[2], data[3],
+			data[4], data[5], data[6], data[7]);
 }
 
 /**
@@ -117,6 +149,20 @@ void HAL_PCD_SetupStageCallback(PCD_HandleTypeDef *hpcd) {
 void HAL_PCD_DataOutStageCallback(PCD_HandleTypeDef *hpcd, uint8_t epnum) {
 	//USBD_LL_DataOutStage(hpcd->pData, epnum, hpcd->OUT_ep[epnum].xfer_buff);
 	printk("usb: dataOUTstage\n");
+}
+
+/**
+ * @brief  Reset callback(Called during Enumeration irq handler)
+ * @param  hpcd: PCD handle
+ * @retval None
+ */
+void HAL_PCD_ResetCallback(PCD_HandleTypeDef *hpcd) {
+	printk("usb: enumeration done\n");
+	/* Set USB Current Speed to upper layer(if possible) */
+	//USBD_LL_SetSpeed(hpcd->pData, speed);
+
+	/* Reset Device */
+	//USBD_LL_Reset(hpcd->pData);
 }
 
 /**
